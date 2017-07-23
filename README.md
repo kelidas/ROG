@@ -5,7 +5,7 @@ ROG = Regular Orthogonal Grid
 - Python 3
 - `numpy` package
 
-The precision for a large number of simulations $n_{\mathrm{sim}} = n ^ {n_{\mathrm{var}}}$ can be achieved by using `mpmath` package.
+The precision for a large number of simulations can be achieved by using `mpmath` package.
 
 This repository contains codes that are used and described in paper
 > SADÍLEK, V.; VOŘECHOVSKÝ, M.; ŠMÍDOVÁ, M.
