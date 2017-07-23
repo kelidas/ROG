@@ -61,3 +61,8 @@ def rog_lengths(n, nvar):
     # calculate real lengths in unit hypercube eq. ((*@\ref{eq:L_ij:delta_ij}@*))
     lengths = np.sqrt(lengths) / float(n)
     return lengths, counts
+
+if __name__ == '__main__':
+    n = 2
+    nvar = 30
+    print(rog_lengths(n, nvar))
