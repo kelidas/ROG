@@ -14,7 +14,8 @@ $ ./rog_lengths n nvar
 $ ./rog_lengths 2 3
 ```
 
-- read results stored in binary files using `numpy` package
+- read results stored in binary files using Python and `numpy` package
+- `lens` data contains integer differences and real distances have to be evaluated as `np.sqrt(lens) / n` 
 
 ```python
 import numpy as np
@@ -24,4 +25,6 @@ nvar = 2
 
 lens = np.fromfile('lens_ae_{:06d}_{:02d}.bin'.format(n, nvar), dtype=float)
 freq = np.fromfile('freq_ae_{:06d}_{:02d}.bin'.format(n, nvar), dtype=float)
+
+lens = np.sqrt(lens) / n # real distances in a unit hypercube
 ```
