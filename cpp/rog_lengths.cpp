@@ -70,6 +70,7 @@ DLLEXPORT int ogrid_p_ae(std::unordered_map<double, double>& len_ae_map,
     double ni;
     unsigned long tmp;
     double nipf = factorial(nv);
+    //double real_length = 0; // TODO: delete
 
     if (timeit) tmr.reset();
 
@@ -105,8 +106,11 @@ DLLEXPORT int ogrid_p_ae(std::unordered_map<double, double>& len_ae_map,
     	ni = (double)nin *(double)nip * (double)nid;
       len_ae_map[len_ae] += ni;
       len_pae_map[len_pae] += ni;
+      //real_length = std::sqrt(len_ae) / (double)n; // TODO: delete
+      //real_length = std::sqrt(len_pae) / (double)n; // TODO: delete
       gen_dt = gen_comb_rep_lex_next(dt, n, nv);
       };
+
     if (timeit) *t=tmr.elapsed();
 }
 
@@ -128,10 +132,12 @@ int main(int argc, char* argv[], char *envp[]){
     std::ofstream freq;
     freq.open(boost::str(boost::format("freq_ae_%06i_%02i.bin") % n % nv), std::ios::binary);
     std::vector<double> keys_bin;
+    double keys_real=0;
     // Retrieve all keys
     boost::copy(len_ae_map | boost::adaptors::map_keys, std::back_inserter(keys_bin));
     for(int i = 0; i < keys_bin.size(); i++)
-        {lens.write((char *) &keys_bin[i], sizeof(double));
+        {keys_real = std::sqrt(keys_bin[i]) / (double)n;
+          lens.write((char *) &keys_real, sizeof(double));
          freq.write((char *) &len_ae_map[keys_bin[i]], sizeof(double));
          //std::cout<< keys[i] << "---" << len_ae_map[keys[i]] << std::endl;
         };
@@ -144,9 +150,10 @@ int main(int argc, char* argv[], char *envp[]){
     // Retrieve all keys
     boost::copy(len_pae_map | boost::adaptors::map_keys, std::back_inserter(keys_bin));
     for(int i = 0; i < keys_bin.size(); i++)
-        {lens.write((char *) &keys_bin[i], sizeof(double));
+        {keys_real = std::sqrt(keys_bin[i]) / (double)n;
+         lens.write((char *) &keys_real, sizeof(double));
          freq.write((char *) &len_pae_map[keys_bin[i]], sizeof(double));
-         //std::cout<< keys[i] << "---" << len_ae_map[keys[i]] << std::endl;
+         //std::cout<< &keys_bin[i] << "---" << len_ae_map[keys_bin[i]] << std::endl;
         };
     lens.close();
     freq.close();
