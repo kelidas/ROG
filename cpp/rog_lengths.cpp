@@ -84,27 +84,29 @@ DLLEXPORT int ogrid_p_ae(std::unordered_map<double, double>& len_ae_map,
         min_dx = 0;
         tmp = -1;
         for (int j=0; j<nv; j++){
-            nin *= n - dt[j];
-            if (dt[j] > 0) nids += 1;
+          len_ae += dt[j] * dt[j];
+          min_dx = std::min(dt[j], n-dt[j]);
+          len_pae += min_dx * min_dx;
+          nin *= n - dt[j];
+          if (dt[j] > 0) nids += 1;
 
-            nips = 0;
-            if (tmp < 0 or tmp != dt[j]){
-                tmp = dt[j];
-                for (int l=0; l<nv; l++){
-                    if(dt[l] - tmp == 0) nips += 1;
-                };
-                nip /= factorial(nips);
+          nips = 0;
+          if (tmp < 0 or tmp != dt[j]){
+            tmp = dt[j];
+            for (int l=0; l<nv; l++){
+              if(dt[l] - tmp == 0) nips += 1;
             };
+            nip /= factorial(nips);
+          };
         };
 
         nid = power2(nids);
 
-	ni = (double)nin *(double)nip * (double)nid;
-        //for(int x = 0; x < nv; x++)
-        //    printf("%u ", dt[x]);
-        //cout <<endl;
-        gen_dt = gen_comb_rep_lex_next(dt, n, nv);
-        };
+    	ni = (double)nin *(double)nip * (double)nid;
+      len_ae_map[len_ae] += ni;
+      len_pae_map[len_pae] += ni;
+      gen_dt = gen_comb_rep_lex_next(dt, n, nv);
+      };
     if (timeit) *t=tmr.elapsed();
 }
 
