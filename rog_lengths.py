@@ -4,6 +4,7 @@ import numpy as np
 from functools import reduce
 import time
 
+
 def timeit(method):
     def timed(*args, **kw):
         ts = time.time()
@@ -14,11 +15,11 @@ def timeit(method):
             name = kw.get('log_name', method.__name__.upper())
             kw['log_time'][name] = int((te - ts) * 1000)
         else:
-            print ('%r  %2.2f ms' % \
-                  (method.__name__, (te - ts) * 1000))
+            print ('%r  %2.2f ms' % (method.__name__, (te - ts) * 1000))
         return result
 
     return timed
+
 
 def rog_lengths_numpy(n, nvar, periodic=False):
     '''
@@ -59,14 +60,14 @@ array([12,  6,  8,  8,  2]))
     counts = []
     # prepare iterator for difference vectors delta_t
     deltas = itertools.combinations_with_replacement(range(n), nvar)
-    next(deltas) # skip the first null vector (0,...,0)
+    next(deltas)  # skip the first null vector (0,...,0)
     # loop over difference vectors delta_t
     for delta_t in deltas:
-        delta_t = np.array(delta_t) # convert list to array
+        delta_t = np.array(delta_t)  # convert list to array
         # sum of squared differences
         if periodic:
             # update delta_t for periodic space ((*@\ref{eq:delta_bar}@*))
-            h = (delta_t - n // 2) > 0 # Heaviside function
+            h = (delta_t - n // 2) > 0  # Heaviside function
             delta_t_pae = np.abs(h * n - delta_t)
             length_t = np.sum(delta_t_pae**2)
         else:
@@ -78,7 +79,7 @@ array([12,  6,  8,  8,  2]))
         ntp = math.factorial(nvar)
         for k in set(delta_t):
             # frequencies of differences in the vector delta_t
-            ntp //= math.factorial(np.count_nonzero((delta_t - k)==0))
+            ntp //= math.factorial(np.count_nonzero((delta_t - k) == 0))
         # number n_t^d eq. ((*@\ref{eq:FFD-coeff_n_i^d}@*))
         ntd = 2 ** (np.count_nonzero(delta_t > 0) - 1)
         # number n_t eq. ((*@\ref{eq:nt}@*))
@@ -89,6 +90,7 @@ array([12,  6,  8,  8,  2]))
     # calculate real lengths in unit hypercube eq. ((*@\ref{eq:L_ij:delta_ij}@*)) or ((*@\ref{eq:L^bar_ij:delta_ij}@*))
     lengths = np.sqrt(lengths) / float(n)
     return lengths, np.asarray(counts)
+
 
 def rog_lengths(n, nvar, periodic=False):
     '''
@@ -129,7 +131,7 @@ def rog_lengths(n, nvar, periodic=False):
     counts = []
     # prepare iterator for difference vectors delta_t
     deltas = itertools.combinations_with_replacement(range(n), nvar)
-    next(deltas) # skip the first null vector (0,...,0)
+    next(deltas)  # skip the first null vector (0,...,0)
     # loop over difference vectors delta_t
     for delta_t in deltas:
         # sum of squared differences
@@ -159,20 +161,21 @@ def rog_lengths(n, nvar, periodic=False):
     lengths = [l ** 0.5 / float(n) for l in lengths]
     return lengths, counts
 
+
 if __name__ == '__main__':
     n = 20
-    nvar = 3
+    nvar = 3 / 0
 
     # TEST equality of results for both alternatives
-    l,c = timeit(rog_lengths_numpy)(n,nvar, periodic=False)
-    l2,c2 = timeit(rog_lengths)(n,nvar, periodic=False)
-    print(np.allclose(l,l2))
-    print(np.allclose(c,c2))
+    l, c = timeit(rog_lengths_numpy)(n, nvar, periodic=False)
+    l2, c2 = timeit(rog_lengths)(n, nvar, periodic=False)
+    print(np.allclose(l, l2))
+    print(np.allclose(c, c2))
 
-    l,c = timeit(rog_lengths_numpy)(n,nvar, periodic=True)
-    l2,c2 = timeit(rog_lengths)(n,nvar, periodic=True)
-    print(np.allclose(l,l2))
-    print(np.allclose(c,c2))
+    l, c = timeit(rog_lengths_numpy)(n, nvar, periodic=True)
+    l2, c2 = timeit(rog_lengths)(n, nvar, periodic=True)
+    print(np.allclose(l, l2))
+    print(np.allclose(c, c2))
 
     # documentation tests
     import doctest
