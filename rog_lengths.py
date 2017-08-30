@@ -164,7 +164,7 @@ def rog_lengths(n, nvar, periodic=False):
 
 if __name__ == '__main__':
     n = 20
-    nvar = 3 / 0
+    nvar = 3
 
     # TEST equality of results for both alternatives
     l, c = timeit(rog_lengths_numpy)(n, nvar, periodic=False)
